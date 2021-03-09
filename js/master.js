@@ -1,5 +1,6 @@
 // check for the local storage color option
 let mainColor = localStorage.getItem("color_option");
+
 if (mainColor != null) {
   document.documentElement.style.setProperty("--main-color", mainColor);
 
@@ -13,6 +14,12 @@ if (mainColor != null) {
     }
   });
 }
+
+// random background option
+let backgroundOption = true;
+
+// variable to control the interval
+let backgroundInterval;
 
 // toggle spin class on icon
 document.querySelector(".toggle-setting .fa-gear").onclick = function () {
@@ -55,24 +62,36 @@ const randomBackEl = document.querySelectorAll(".random-backgrounds span");
 randomBackEl.forEach((span) => {
   // click on every span
   span.addEventListener("click", (e) => {
-   
     // remove active class from all spans
     e.target.parentElement.querySelectorAll(".active").forEach((element) => {
       element.classList.remove("active");
     });
     // add active class on self
     e.target.classList.add("active");
+
+    if (e.target.dataset.background === "yes") {
+      backgroundOption = true;
+      randomizeImgs();
+    } else {
+      backgroundOption = false;
+      clearInterval(backgroundInterval);
+    }
   });
 });
 
 // selecting landing page
 let landingPage = document.querySelector(".landing-page");
 
-// get array of images
+// get array of imagesv
 let imgArray = ["01.jpg", "02.jpg", "03.jpg", "04.jpg", "05.jpg", "06.jpg"];
 
-setInterval(() => {
-  let randomNumber = Math.floor(Math.random() * imgArray.length);
-  landingPage.style.backgroundImage =
-    'url("imgs/' + imgArray[randomNumber] + '")';
-}, 10000);
+// function to randomize imgs
+function randomizeImgs() {
+  if (backgroundOption == true) {
+    backgroundInterval = setInterval(() => {
+      let randomNumber = Math.floor(Math.random() * imgArray.length);
+      landingPage.style.backgroundImage =
+        'url("imgs/' + imgArray[randomNumber] + '")';
+    }, 1000);
+  }
+}
