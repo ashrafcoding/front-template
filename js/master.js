@@ -21,6 +21,25 @@ let backgroundOption = true;
 // variable to control the interval
 let backgroundInterval;
 
+// check if there is local storage random background item
+let backgroundLocalItem = localStorage.getItem("background_option");
+if (backgroundLocalItem !== null) {
+  if (backgroundLocalItem == "true") {
+    backgroundOption = true;
+  } else {
+    backgroundOption = false;
+  }
+  // remove active class from all span
+  document.querySelectorAll(".random-backgrounds span").forEach((element) => {
+    element.classList.remove("active");
+  });
+  if (backgroundLocalItem === "true") {
+    document.querySelector(".yes").classList.add("active");
+  } else {
+    document.querySelector(".no").classList.add("active");
+  }
+}
+
 // toggle spin class on icon
 document.querySelector(".toggle-setting .fa-gear").onclick = function () {
   // toggle fa-spin class on this icon for rotation
@@ -72,9 +91,11 @@ randomBackEl.forEach((span) => {
     if (e.target.dataset.background === "yes") {
       backgroundOption = true;
       randomizeImgs();
+      localStorage.setItem("background_option", true);
     } else {
       backgroundOption = false;
       clearInterval(backgroundInterval);
+      localStorage.setItem("background_option", false);
     }
   });
 });
@@ -82,7 +103,7 @@ randomBackEl.forEach((span) => {
 // selecting landing page
 let landingPage = document.querySelector(".landing-page");
 
-// get array of imagesv
+// get array of images
 let imgArray = ["01.jpg", "02.jpg", "03.jpg", "04.jpg", "05.jpg", "06.jpg"];
 
 // function to randomize imgs
@@ -93,5 +114,22 @@ function randomizeImgs() {
       landingPage.style.backgroundImage =
         'url("imgs/' + imgArray[randomNumber] + '")';
     }, 1000);
+  }
+}
+
+
+// Select skills selector
+let ourSkills = document.querySelector(".skills")
+window.onscroll = function(){
+  let skillsOffsetTop = ourSkills.offsetTop
+  let skillsOuterHeight = ourSkills.offsetHeight
+  let windowHeight = this.innerHeight
+  let windowScrollTop = this.pageYOffset
+  if (windowScrollTop > (skillsOffsetTop + skillsOuterHeight - windowHeight)){
+    let allSkills = document.querySelectorAll(".skill-box .skill-progress span")
+    allSkills.forEach(skill => {
+      skill.style.width = skill.dataset.progress
+    })
+
   }
 }
